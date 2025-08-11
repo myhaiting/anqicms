@@ -3,13 +3,11 @@ package manageController
 import (
 	"archive/zip"
 	"crypto/tls"
-	"encoding/json"
 	"fmt"
 	"github.com/kataras/iris/v12"
 	"github.com/parnurzeal/gorequest"
 	"io"
 	"kandaoni.com/anqicms/config"
-	"kandaoni.com/anqicms/library"
 	"kandaoni.com/anqicms/model"
 	"kandaoni.com/anqicms/provider"
 	"kandaoni.com/anqicms/response"
@@ -116,40 +114,40 @@ func GetStatisticsDashboard(ctx iris.Context) {
 
 // CheckVersion 检查新版
 func CheckVersion(ctx iris.Context) {
-	link := "https://www.anqicms.com/downloads/version.json?goos=" + runtime.GOOS + "&goarch=" + runtime.GOARCH + "&type=" + config.VersionType
-	var lastVersion response.LastVersion
-	_, body, errs := gorequest.New().SetDoNotClearSuperAgent(true).TLSClientConfig(&tls.Config{InsecureSkipVerify: true}).Timeout(10 * time.Second).Get(link).EndBytes()
-	if errs != nil {
-		ctx.JSON(iris.Map{
-			"code": config.StatusOK,
-			"msg":  ctx.Tr("CheckThatTheVersionIsTheLatestVersion"),
-		})
-		return
-	}
-
-	err := json.Unmarshal(body, &lastVersion)
-	if err == nil {
-		result := library.VersionCompare(lastVersion.Version, config.Version)
-		if result == 1 {
-			// 测试
-			// 版本有更新
-			ctx.JSON(iris.Map{
-				"code": config.StatusOK,
-				"msg":  ctx.Tr("FoundANewVersion"),
-				"data": lastVersion,
-			})
-			return
-		} else if lastVersion.TrialVersion != "" && library.VersionCompare(lastVersion.TrialVersion, config.Version) == 1 {
-			lastVersion.Trial = true
-			lastVersion.Version = lastVersion.TrialVersion
-			lastVersion.Description = lastVersion.TrialDescription
-			ctx.JSON(iris.Map{
-				"code": config.StatusOK,
-				"msg":  ctx.Tr("FoundANewTrialVersion"),
-				"data": lastVersion,
-			})
-		}
-	}
+	//link := "https://www.anqicms.com/downloads/version.json?goos=" + runtime.GOOS + "&goarch=" + runtime.GOARCH + "&type=" + config.VersionType
+	//var lastVersion response.LastVersion
+	//_, body, errs := gorequest.New().SetDoNotClearSuperAgent(true).TLSClientConfig(&tls.Config{InsecureSkipVerify: true}).Timeout(10 * time.Second).Get(link).EndBytes()
+	//if errs != nil {
+	//	ctx.JSON(iris.Map{
+	//		"code": config.StatusOK,
+	//		"msg":  ctx.Tr("CheckThatTheVersionIsTheLatestVersion"),
+	//	})
+	//	return
+	//}
+	//
+	//err := json.Unmarshal(body, &lastVersion)
+	//if err == nil {
+	//	result := library.VersionCompare(lastVersion.Version, config.Version)
+	//	if result == 1 {
+	//		// 测试
+	//		// 版本有更新
+	//		ctx.JSON(iris.Map{
+	//			"code": config.StatusOK,
+	//			"msg":  ctx.Tr("FoundANewVersion"),
+	//			"data": lastVersion,
+	//		})
+	//		return
+	//	} else if lastVersion.TrialVersion != "" && library.VersionCompare(lastVersion.TrialVersion, config.Version) == 1 {
+	//		lastVersion.Trial = true
+	//		lastVersion.Version = lastVersion.TrialVersion
+	//		lastVersion.Description = lastVersion.TrialDescription
+	//		ctx.JSON(iris.Map{
+	//			"code": config.StatusOK,
+	//			"msg":  ctx.Tr("FoundANewTrialVersion"),
+	//			"data": lastVersion,
+	//		})
+	//	}
+	//}
 
 	ctx.JSON(iris.Map{
 		"code": config.StatusOK,
