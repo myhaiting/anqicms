@@ -18,7 +18,7 @@ type AwsS3Storage struct {
 
 func NewAwsStorage(cfg *config.PluginStorageConfig) (*AwsS3Storage, error) {
 	defCfg, err := awsConfig.LoadDefaultConfig(context.TODO(),
-		awsConfig.WithRegion("us-west-2"),
+		awsConfig.WithRegion(cfg.S3Region),
 		awsConfig.WithCredentialsProvider(credentials.NewStaticCredentialsProvider(cfg.S3AccessKey, cfg.S3SecretKey, "")),
 	)
 	if err != nil {
