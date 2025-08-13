@@ -83,6 +83,11 @@ func (node *tagPageDetailNode) Execute(ctx *pongo2.ExecutionContext, writer pong
 	if fieldName == "Content" && render {
 		content = library.MarkdownToHTML(pageDetail.Content, currentSite.System.BaseUrl, currentSite.Content.FilterOutlink)
 	}
+	// replace
+	if fieldName == "Content" {
+		content = currentSite.ReplaceContentUrl(fmt.Sprintf("%v", content), true)
+	}
+
 	if node.name == "" {
 		writer.WriteString(fmt.Sprintf("%v", content))
 	} else {
